@@ -191,8 +191,7 @@ if df is not None:
             horizon_mode = st.radio("Mode", ["Steps", "Time"], horizontal=True)
 
             if horizon_mode == "Steps":
-                # Increase max limit to allow for long horizons in step mode as well (approx 1 year of 15-min data is ~35k)
-                horizon = st.slider(f"Horizon ({freq_label} Steps)", 1, max(36000, default_horizon*3), default_horizon)
+                horizon = st.slider(f"Horizon ({freq_label} Steps)", 1, max(72, default_horizon*3), default_horizon)
             else:
                 # Time mode
                 if "Daily" in freq_label:
@@ -202,12 +201,10 @@ if df is not None:
                     days = st.number_input("Horizon (Days)", min_value=1, max_value=365, value=7)
                     horizon = days * 24
                 elif "15-min" in freq_label:
-                     # Allow up to 365 days (8760 hours)
-                     days = st.number_input("Horizon (Days)", min_value=1, max_value=365, value=7)
-                     horizon = days * 24 * 4
+                     hours = st.number_input("Horizon (Hours)", min_value=1, max_value=720, value=24)
+                     horizon = hours * 4
                 else:
-                    # Generic fallback, allow plenty of steps
-                    steps = st.number_input("Horizon (Steps)", min_value=1, max_value=100000, value=24)
+                    steps = st.number_input("Horizon (Steps)", min_value=1, max_value=1000, value=24)
                     horizon = steps
 
             if horizon > 1000: # Generic warning threshold
